@@ -1,0 +1,102 @@
+---
+title: "607 Week 2"
+author: "Benson"
+date: "2/13/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Six recent popular moviews survey
+
+This is an analysis to understand which movie is favorite by my friends and family. I was doing this survey by asking my friends and family to rate the recent popular movies (Spider-man: No Way Home, Death on the Nile, Jackass forever, Scream, Marry Me, Moonfall).
+
+
+```{r db}
+#Prepare MySQL connection and connecting to Rstudio
+library(RMySQL)
+
+db_user <- 'root'
+db_password <- 'abcd1234'
+db_name <- 'movieDB'
+db_table <- 'moviesurvey'
+db_host <- '127.0.0.1'
+
+myConnection <- dbConnect(MySQL(), user=db_user, password=db_password, host=db_host, dbname=db_name)
+
+
+#Load the dataframe
+query <- paste0("select * from ", db_table)
+runQuery <- dbSendQuery(myConnection, query)
+df <- fetch(runQuery, n=-1)
+```
+
+## Summary dataframe and data cleaning
+```{r df}
+# summary df
+summary(df)
+
+#data cleaning
+df <- df %>%
+  mutate(respondent_relationship = replace(respondent_relationship,respondent_relationship == "Slibing", "Sibling"))
+
+unique(df$respondent_relationship)
+```
+
+
+
+## Analysis with ggplot
+```{r analysis}
+library(dplyr)
+library(ggplot2)
+
+# average rating of each movie
+
+ggplot(data = df)+
+  aes(x=movie, y=movie_rating, color=movie)+
+  ggtitle("Movie average rating")+
+  geom_jitter()+
+  geom_boxplot(size=1, alpha=0.5)+
+  theme(plot.title=element_text(hjust=0.5))
+
+print("All movies have the average rating 4 except movie Marry Me.")
+
+ggplot(data = df) +
+  aes(x = movie_rating, fill = movie) + 
+  ggtitle("Movie rating")+
+  geom_histogram(bins = 30) +
+  facet_wrap(~movie, nrow = 3)
+
+print("Both Spiderman and Jackass forever have the highest rating, and Spiderman has favorited.")
+
+ggplot(data = df) +
+  aes(y = movie_rating, fill = movie) +
+  ggtitle("Movie rating by gender")+
+  geom_histogram(bins = 30) +
+  facet_wrap(~respondent_gender, nrow = 2)
+
+print("My female sibling favor movie is Marry Me.")
+
+ggplot(data = df) +
+  aes(x = movie_rating, fill = respondent_relationship) +
+  ggtitle("Movie rating by relation with me")+
+  geom_histogram(bins = 30) +
+  facet_wrap(~movie, nrow = 2)
+
+print("My friends and siblings favor movie is Spiderman.")
+```
+
+## Summary
+Based on my survey for the six movies, I found that females are more likely to watch Marry Me and males don't. However, this dataset is biased with low participation in the survey. 
+Using an online survey platform like SurveyMonkey can help increase the number of participants. Also, people worldwide can easily access the survey thru online surveys. 
+While increasing the number of participants can make this analysis more meaningful.
+
+## Close Database Connection
+```{r closedb}
+#Close the db connection
+dbDisconnect(myConnection)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
