@@ -1,0 +1,31 @@
+movie,respondent_gender,respondent_relationship,respondent_age,movie_rating
+"SpiderMan:No Way Home",Male,Friend,31,5
+"SpiderMan:No Way Home",Male,Slibing,30,5
+"SpiderMan:No Way Home",Female,Friend,29,3
+"SpiderMan:No Way Home",Male,Slibing,18,4
+"SpiderMan:No Way Home",Female,Slibing,30,3
+"Death on the Nile",Male,Friend,31,3
+"Death on the Nile",Male,Slibing,30,4
+"Death on the Nile",Female,Friend,29,4
+"Death on the Nile",Male,Slibing,18,3
+"Death on the Nile",Female,Slibing,30,4
+"Jackass forever",Male,Friend,31,4
+"Jackass forever",Male,Slibing,30,5
+"Jackass forever",Female,Friend,29,2
+"Jackass forever",Male,Slibing,18,5
+"Jackass forever",Female,Slibing,30,2
+"Marry Me",Male,Friend,31,2
+"Marry Me",Male,Slibing,30,2
+"Marry Me",Female,Friend,29,5
+"Marry Me",Male,Slibing,18,2
+"Marry Me",Female,Slibing,30,4
+Scream,Male,Friend,31,2
+Scream,Male,Slibing,30,3
+Scream,Female,Friend,29,4
+Scream,Male,Slibing,18,5
+Scream,Female,Slibing,30,4
+Moonfall,Male,Friend,31,4
+Moonfall,Male,Slibing,30,4
+Moonfall,Female,Friend,29,1
+Moonfall,Male,Slibing,18,5
+Moonfall,Female,Slibing,30,2
