@@ -2,11 +2,14 @@
 title: "607 Week 2"
 author: "Benson"
 date: "2/13/2022"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup}
+library(dplyr)
+library(ggplot2)
 ```
 
 ## Six recent popular moviews survey
@@ -27,6 +30,55 @@ db_host <- '127.0.0.1'
 myConnection <- dbConnect(MySQL(), user=db_user, password=db_password, host=db_host, dbname=db_name)
 
 
+#check database
+dbSendQuery(myConnection, 'DROP SCHEMA IF EXISTS `movieDB`;')
+#create database
+dbSendQuery(myConnection, 'CREATE SCHEMA `movieDB` ;')
+#use database
+dbSendQuery(myConnection, 'USE `movieDB` ;')
+
+#check table 
+dbSendQuery(myConnection, 'DROP TABLE IF EXISTS moviesurvey;')
+#create table
+dbSendQuery(myConnection, 'CREATE TABLE moviesurvey (movie varchar(255) NOT NULL,respondent_gender varchar(255) NOT NULL,respondent_relationship varchar(255) NOT NULL,respondent_age int NOT NULL,movie_rating int NOT NULL);')
+
+#insert data
+dbSendQuery(myConnection, "INSERT INTO moviesurvey
+    (movie,respondent_gender,respondent_relationship,respondent_age,movie_rating)
+VALUES
+    ('SpiderMan:No Way Home','Male','Friend',31,5),
+    ('SpiderMan:No Way Home','Male','Slibing',30,5),
+    ('SpiderMan:No Way Home','Female','Friend',29,3),
+    ('SpiderMan:No Way Home','Male','Slibing',18,4),
+    ('SpiderMan:No Way Home','Female','Slibing',31,3),
+    ('Death on the Nile','Male','Friend',31,3),
+    ('Death on the Nile','Male','Slibing',30,4),
+    ('Death on the Nile','Female','Friend',29,4),
+    ('Death on the Nile','Male','Slibing',18,3),
+    ('Death on the Nile','Female','Slibing',31,4),
+    ('Jackass forever','Male','Friend',31,3),
+    ('Jackass forever','Male','Slibing',30,4),
+    ('Jackass forever','Female','Friend',29,4),
+    ('Jackass forever','Male','Slibing',18,5),
+    ('Jackass forever','Female','Slibing',31,2),
+    ('Marry Me','Male','Friend',31,2),
+    ('Marry Me','Male','Slibing',30,2),
+    ('Marry Me','Female','Friend',29,5),
+    ('Marry Me','Male','Slibing',18,2),
+    ('Marry Me','Female','Slibing',31,4),
+    ('Scream','Male','Friend',31,2),
+    ('Scream','Male','Slibing',30,3),
+    ('Scream','Female','Friend',29,4),
+    ('Scream','Male','Slibing',18,5),
+    ('Scream','Female','Slibing',31,4),
+    ('Moonfall','Male','Friend',31,4),
+    ('Moonfall','Male','Slibing',30,4),
+    ('Moonfall','Female','Friend',29,1),
+    ('Moonfall','Male','Slibing',18,5),
+    ('Moonfall','Female','Slibing',31,2);
+    ")
+
+
 #Load the dataframe
 query <- paste0("select * from ", db_table)
 runQuery <- dbSendQuery(myConnection, query)
@@ -39,8 +91,7 @@ df <- fetch(runQuery, n=-1)
 summary(df)
 
 #data cleaning
-df <- df %>%
-  mutate(respondent_relationship = replace(respondent_relationship,respondent_relationship == "Slibing", "Sibling"))
+df <- df %>% mutate(respondent_relationship = replace(respondent_relationship,respondent_relationship == "Slibing", "Sibling"))
 
 unique(df$respondent_relationship)
 ```
@@ -49,8 +100,7 @@ unique(df$respondent_relationship)
 
 ## Analysis with ggplot
 ```{r analysis}
-library(dplyr)
-library(ggplot2)
+
 
 # average rating of each movie
 
@@ -99,4 +149,3 @@ While increasing the number of participants can make this analysis more meaningf
 dbDisconnect(myConnection)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
